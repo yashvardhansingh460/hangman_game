@@ -1,0 +1,241 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+void game_start()
+{
+  std::cout << "==================== \n";
+  std::cout << "Hangman: The Game\n";
+  std::cout << "==================== \n";
+  std::cout << "Instructions: Save your friend from being hanged by guessing the letters in the codeword. \n";
+}
+
+//Function used to display the hangman on every icorrect guess
+void display_misses(int misses)
+{
+  if(misses==0)
+  {
+    cout<<"  +---+ \n";
+    cout<<"  |   | \n";
+    cout<<"      | \n";
+    cout<<"      | \n";
+    cout<<"      | \n";
+    cout<<"      | \n";
+    cout<<" ========= \n";
+  }
+  else if(misses==1)
+  {
+    cout<<"  +---+ \n";
+    cout<<"  |   | \n";
+    cout<<"  O   | \n";
+    cout<<"      | \n";
+    cout<<"      | \n";
+    cout<<"      | \n";
+    cout<<" ========= \n";
+  }
+  else if(misses==2)
+  {
+    cout<<"  +---+ \n";
+    cout<<"  |   | \n";
+    cout<<"  O   | \n";
+    cout<<"  |   | \n";
+    cout<<"      | \n";
+    cout<<"      | \n";
+    cout<<" ========= \n";
+  }
+  else if(misses==3)
+  {
+    cout<<"  +---+ \n";
+    cout<<"  |   | \n";
+    cout<<"  O   | \n";
+    cout<<" /|   | \n";
+    cout<<"      | \n";
+    cout<<"      | \n";
+    cout<<" ========= \n";
+  }
+  else if(misses==4)
+  {
+    cout<<"  +---+ \n";
+    cout<<"  |   | \n";
+    cout<<"  O   | \n";
+    cout<<" /|\\  | \n";
+    cout<<"      | \n";
+    cout<<"      | \n";
+    cout<<" ========= \n";
+  }
+  else if(misses==5)
+  {
+    cout<<"  +---+ \n";
+    cout<<"  |   | \n";
+    cout<<"  O   | \n";
+    cout<<" /|\\  | \n";
+    cout<<" /    | \n";
+    cout<<"      | \n";
+    cout<<" ========= \n";
+  }
+  else if(misses==6)
+  {
+    cout<<"  +---+ \n";
+    cout<<"  |   | \n";
+    cout<<"  O   | \n";
+    cout<<" /|\\  | \n";
+    cout<<" / \\  | \n";
+    cout<<"      | \n";
+    cout<<" ========= \n";
+  }
+
+}
+
+//Function display the incorrect codeword and the codeword which is correct guess by the user
+void display_status(vector<char> incorrect, string answer)
+{
+  cout<<"Incorrect Guesses: \n";
+
+  for(int i = 0; i<incorrect.size(); i++)
+  {
+    cout<<incorrect[i]<<" ";
+  }
+
+  cout<<"\nCodeword:\n";
+
+  for(int i = 0; i<answer.length(); i++)
+  {
+    cout<<answer[i]<<" ";
+  }
+}
+
+//function which display after complete the level either hang a man(means loss in game) or complete the task by correct guessing the word(means win in the game) 
+void end_game(string answer, string codeword,bool& is_game_end,int& level,int total_level)
+{
+  if(level>=total_level){
+       cout<<endl<<endl<<"CONGRATULATIONS!! "<<endl<<"YOU COMPLETE THE GAME"<<endl<<endl;
+       return;
+    }
+  if(answer==codeword)
+  {
+    cout<<"Hooray! You saved the person from being hanged and earned a medal of honor!\n";
+    cout<<"Congratulations! You unlocked next level\n\n";
+    cout<<"You want to go on the next level or want to exit the game "<<endl;
+    char ch;
+    cout<<"Enter (n) for next level or (e) to exit the Game  : ";
+    cin>>ch;
+    while(ch!='n' || ch!='e'){ 
+    if(ch=='n'){
+        is_game_end=false;
+        break;
+    }
+    else {
+        if(ch=='e'){
+          is_game_end=true;
+           break;
+          }
+         else {
+        // while(ch!='n' || ch!='e'){     
+        cout<<endl<<"INVALID KEY.!!"<<endl<<"Enter valid key n/e to go to next level or to exit the Game. "<<endl;
+        cout<<"Enter (n) for next level or (e) to exit the Game  : ";
+        cin>>ch;
+         }}
+        }
+  }
+  else
+  {
+    cout<<endl<<"On no! The man is hanged!\n\n";
+    // level--;
+    cout<<"Now, you want to play again or want to exit from the game.";
+    cout<<endl<<"Enter (p) to play again or (e) to exit from the game : ";
+    char rslt;
+    cin>>rslt;
+    while(rslt!='p' || rslt!='e'){
+        if(rslt=='p'){
+            level--;
+            break;
+        }
+        else {
+            if(rslt=='e'){
+                is_game_end=true;
+                break;
+            }
+            else{
+                cout<<endl<<"INVALID CHARACTER !! ";
+                cout<<endl<<"Enter valid character p/e : ";
+                cin>>rslt;
+            }
+        }
+    }
+  }
+}
+
+
+int main()
+{
+  game_start();
+  //each level question variation to the user
+  vector<string> levels_variation = {"Fruit","Animal","Bird","Vegetable"};
+  
+  //each level answer of the each question
+  vector<string> levels_answers = {"apple","lion","peacock","pumpkin"};
+  
+  int total_level=levels_variation.size();
+  int level = 0;
+  
+  
+  while(level<total_level){
+      
+  string codeword = levels_answers[level];
+  string answer = "";
+  int codeword_length = codeword.length();
+  for(int i=0;i<codeword_length;i++){
+      answer+='_';
+  }
+  cout<<endl<<endl<<"       You are at level "<<level+1<<endl;
+  cout<<"       Guess the word which is related to the " <<levels_variation[level] <<" having "<<codeword.length()<<" characters."  <<endl<<endl<<endl;
+  int misses = 0;
+  vector<char> incorrect;
+  bool guess = false;
+  char letter;
+
+
+  while(answer!=codeword && misses < 7)
+  {
+    display_misses(misses);
+    display_status(incorrect, answer);
+    cout<<"\n\nPlease enter your guess: ";
+    cin>>letter;
+
+    for(int i = 0; i<codeword.length(); i++)
+    {
+      if(letter==codeword[i])
+      {
+        answer[i] = letter;
+        guess = true;
+      }
+    }
+    if(guess)
+    {
+      cout<<"\nCorrect!\n";
+    }
+    else
+    {
+      cout<<"\nIncorrect! Another portion of the person has been drawn.\n";
+      incorrect.push_back(letter);
+      misses++;
+    }
+    guess = false;
+  }
+  if(level+1>=total_level){
+       cout<<endl<<endl<<"CONGRATULATIONS!! "<<endl<<"YOU COMPLETE THE GAME"<<endl<<endl;
+       return 0;
+   }
+  bool is_game_end = false;
+  end_game(answer, codeword,is_game_end,level,total_level);
+  if(is_game_end){
+      cout<<endl<<"You Exit from the game";
+      return 0;
+  }
+  else{
+    level++;
+  }
+     
+  }
+  return 0;
+}
+
