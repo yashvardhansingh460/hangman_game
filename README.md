@@ -1,4 +1,4 @@
-# hangman_game
+# Hangman_game
 
 How to run this Game :- 
 
